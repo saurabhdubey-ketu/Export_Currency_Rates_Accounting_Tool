@@ -565,7 +565,7 @@ function renderRates(){
   $('rates').innerHTML=tiles
    +`<div class="rsp">
       <div class="rsp-btns">${avBadge}<button id="rf" ${live.busy?'disabled':''}>${live.busy?'Refreshing…':'Refresh rates'}</button><button id="rsettoggle">Rate settings</button></div>
-      <div class="hint">${live.error?`<span class="r">${esc(live.error)}</span><br>`:''}Source: ${esc(live.source||'—')}, updated ${esc(live.updated||'—')}.<br>Last checked ${t}. ${db.avKey?'Auto-checks every 60 min.':'Auto-checks every 5 min.'}</div>
+      <div class="hint">${live.error?`<span class="r">${esc(live.error)}</span><br>`:''}Last updated: ${esc(live.updated||'—')} &nbsp;·&nbsp; ${db.avKey?'Auto-checks every 60 min.':'Auto-checks every 5 min.'}</div>
     </div>`;
   $('rf').onclick=pull;
   $('rsettoggle').onclick=()=>{$('ratesettings').hidden=!$('ratesettings').hidden};
