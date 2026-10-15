@@ -306,13 +306,55 @@ svg text{fill:var(--mu);font-size:11px;font-family:Inter,sans-serif}
 
 </div>
 
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const KEY='export_realization_v1';
 const CURS=['USD','EUR','GBP'];
 let db={ccr:9.5,warn:5,items:[],alerts:[],avKey:''};
-try{const s=localStorage.getItem(KEY);if(s)db=Object.assign(db,JSON.parse(s))}catch(e){}
-const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
+
+/* ---------- Firebase ---------- */
+const firebaseConfig={
+  apiKey:"AIzaSyDZNF2W9AWy3XIVn3RcpHOygMgk4jUi-oU",
+  authDomain:"exportcurrencytool.firebaseapp.com",
+  projectId:"exportcurrencytool",
+  storageBucket:"exportcurrencytool.firebasestorage.app",
+  messagingSenderId:"785118897327",
+  appId:"1:785118897327:web:ec5a2a835eef8d763fe05a"
+};
+firebase.initializeApp(firebaseConfig);
+const fs=firebase.firestore();
+const DOC=fs.collection('app').doc('data');
+
+/* Load from Firestore on start, then sync in real-time */
+async function initDB(){
+  try{
+    // Real-time listener — all users see updates instantly
+    DOC.onSnapshot(snap=>{
+      if(snap.exists()){
+        const d=snap.data();
+        db.items=d.items||[];
+        db.alerts=d.alerts||[];
+        db.ccr=d.ccr??db.ccr;
+        db.warn=d.warn??db.warn;
+        renderAll();
+        if(!$('t-trend').hidden)renderAlerts();
+      }
+    });
+  }catch(e){
+    // Fallback to localStorage if Firestore unavailable
+    try{const s=localStorage.getItem(KEY);if(s)db=Object.assign(db,JSON.parse(s))}catch(e2){}
+  }
+}
+
+const persist=()=>{
+  // localStorage backup
+  try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}
+  // Firestore save (fire and forget)
+  DOC.set({items:db.items,alerts:db.alerts,ccr:db.ccr,warn:db.warn}).catch(()=>{});
+};
 const f=(n,d=2)=>n!==null&&n!==''&&n!==undefined&&isFinite(n)?(+n).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d}):'-';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const days=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
@@ -644,7 +686,7 @@ $('bak').onclick=()=>dl('export_realization_backup.json',JSON.stringify(db),'app
 $('imp').onclick=()=>$('file').click();
 $('file').onchange=e=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.items))throw 0;db=Object.assign({ccr:9.5,warn:5,alerts:[]},d);persist();reset();renderAll()}catch(_){alert('Invalid backup file')}};r.readAsText(e.target.files[0])};
 
-renderRates();reset();renderAll();pull();
+initDB();renderRates();reset();renderAll();pull();
 </script>
 </body>
 </html>
