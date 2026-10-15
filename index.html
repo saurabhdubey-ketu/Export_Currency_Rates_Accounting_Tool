@@ -76,7 +76,6 @@ small,.hint{font-size:12px;color:var(--mu);line-height:1.6}
 .rsp-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 
 /* ── Rate settings ── */
-#ratesettings{background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);padding:18px 22px;margin-top:8px;margin-bottom:16px}
 
 /* ── Buttons ── */
 button{padding:7px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:13px/1 Inter,sans-serif;cursor:pointer;transition:.12s;white-space:nowrap}
@@ -186,14 +185,6 @@ svg text{fill:var(--mu);font-size:11px;font-family:Inter,sans-serif}
 <div class="wrap">
 
 <div class="card ratesbar" id="rates"></div>
-<div id="ratesettings" hidden>
-  <b style="font-size:13px;font-weight:600;display:block;margin-bottom:12px">Rate Source Settings</b>
-  <div style="max-width:480px">
-    <label>Alpha Vantage API key &nbsp;<a href="https://www.alphavantage.co/support/#api-key" target="_blank" style="font-weight:400">Get free key ↗</a></label>
-    <input id="avkey" placeholder="Paste your key here" autocomplete="off">
-    <div class="hint" id="avkeyhint" style="margin-top:6px">With a key: rates refresh every hour (stays within the 25 req/day free limit). Without: daily free sources are used.</div>
-  </div>
-</div>
 
 <div id="alertbar"></div>
 
@@ -565,14 +556,12 @@ function renderRates(){
     const bankHtml=bankSpread!=null?`<small style="color:${bankSpread>=0?'var(--g)':'var(--r)'}">Avg bank spread: ${bankSpread>=0?'+':''}${f(bankSpread,4)}</small>`:'';
     return `<div class="k"><span>${c} / INR &nbsp;<small style="font-weight:400;text-transform:none;letter-spacing:0">mid-market</small></span><b>${r?f(r,4):'-'}</b>${bankHtml}</div>`;
   }).join('');
-  const avBadge=db.avKey?`<span class="tag ${live.source==='Alpha Vantage'?'g':'y'}" style="font-size:11px">${live.source==='Alpha Vantage'?'AV live':'AV key set'}</span>`:'';
   $('rates').innerHTML=tiles
    +`<div class="rsp">
-      <div class="rsp-btns">${avBadge}<button id="rf" ${live.busy?'disabled':''}>${live.busy?'Refreshing…':'Refresh rates'}</button><button id="rsettoggle">Rate settings</button></div>
-      <div class="hint">${live.error?`<span class="r">${esc(live.error)}</span><br>`:''}Last updated: ${esc(live.updated||'—')} &nbsp;·&nbsp; ${db.avKey?'Auto-checks every 60 min.':'Auto-checks every 5 min.'}</div>
+      <div class="rsp-btns"><button id="rf" ${live.busy?'disabled':''}>${live.busy?'Refreshing…':'Refresh rates'}</button></div>
+      <div class="hint">${live.error?`<span class="r">${esc(live.error)}</span><br>`:''}Last updated: ${esc(live.updated||'—')} &nbsp;·&nbsp; Auto-checks every 5 min.</div>
     </div>`;
   $('rf').onclick=pull;
-  $('rsettoggle').onclick=()=>{$('ratesettings').hidden=!$('ratesettings').hidden};
 }
 
 function spotHint(){
@@ -584,16 +573,10 @@ function applyLive(){const r=live.rates[$('cur').value];if(r&&!spotManual&&editI
 $('spot').addEventListener('input',()=>{spotManual=true;spotHint()});
 $('cur').addEventListener('change',()=>{spotManual=false;applyLive();renderLive()});
 
-/* ---------- Rate settings panel ---------- */
-function initRateSettings(){$('avkey').value=db.avKey||''}
-$('avkey').addEventListener('input',()=>{db.avKey=$('avkey').value.trim();persist();renderRates()});
-initRateSettings();
-
 /* ---------- Auto-refresh ---------- */
 let _refreshTimer=null;
-function scheduleRefresh(){clearInterval(_refreshTimer);_refreshTimer=setInterval(pull,db.avKey?60*60*1000:5*60*1000)}
+function scheduleRefresh(){clearInterval(_refreshTimer);_refreshTimer=setInterval(pull,5*60*1000)}
 scheduleRefresh();
-$('avkey').addEventListener('input',scheduleRefresh);
 
 /* ---------- Charts ---------- */
 function bars(data){
