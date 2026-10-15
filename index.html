@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export Realization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f1f5f9;--card:#fff;--tx:#0f172a;--mu:#64748b;
+  --bd:#e2e8f0;--bd2:#cbd5e1;
+  --ac:#2563eb;--ac-h:#1d4ed8;--ac-lt:#eff6ff;
+  --g:#15803d;--gb:#f0fdf4;--g-bd:#bbf7d0;
+  --r:#dc2626;--rb:#fef2f2;--r-bd:#fecaca;
+  --y:#b45309;--yb:#fffbeb;--y-bd:#fde68a;
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05);
+  --sh2:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px -2px rgba(0,0,0,.05);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mu:#94a3b8;
+  --bd:#334155;--bd2:#475569;
+  --ac:#60a5fa;--ac-h:#93c5fd;--ac-lt:#1e3a5f;
+  --g:#4ade80;--gb:#052e16;--g-bd:#166534;
+  --r:#f87171;--rb:#450a0a;--r-bd:#991b1b;
+  --y:#fbbf24;--yb:#1c1008;--y-bd:#92400e;
+  --sh:0 1px 3px rgba(0,0,0,.25),0 1px 2px rgba(0,0,0,.15);
+  --sh2:0 4px 6px -1px rgba(0,0,0,.3),0 2px 4px -2px rgba(0,0,0,.2);
+}}
+:root[data-theme="dark"]{
+  --bg:#0f172a;--card:#1e293b;--tx:#f1f5f9;--mu:#94a3b8;
+  --bd:#334155;--bd2:#475569;
+  --ac:#60a5fa;--ac-h:#93c5fd;--ac-lt:#1e3a5f;
+  --g:#4ade80;--gb:#052e16;--g-bd:#166534;
+  --r:#f87171;--rb:#450a0a;--r-bd:#991b1b;
+  --y:#fbbf24;--yb:#1c1008;--y-bd:#92400e;
+  --sh:0 1px 3px rgba(0,0,0,.25),0 1px 2px rgba(0,0,0,.15);
+  --sh2:0 4px 6px -1px rgba(0,0,0,.3),0 2px 4px -2px rgba(0,0,0,.2);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font:14px/1.5 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--ac)}
+h3{font-size:14px;font-weight:600;margin:0 0 10px}
+small,.hint{font-size:12px;color:var(--mu);line-height:1.6}
+.g{color:var(--g)}.r{color:var(--r)}
+
+/* ── Header ── */
+.hdr{background:var(--card);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50;box-shadow:var(--sh)}
+.hdr-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-icon svg{width:20px;height:20px}
+.brand-name{font-size:16px;font-weight:700;letter-spacing:-.025em;line-height:1.2}
+.brand-sub{font-size:12px;color:var(--mu);display:none}
+@media(min-width:640px){.brand-sub{display:block}}
+#theme{background:transparent;border:1px solid var(--bd);border-radius:8px;padding:7px 14px;color:var(--mu);font:13px/1 Inter,sans-serif;cursor:pointer;transition:.12s;white-space:nowrap}
+#theme:hover{background:var(--bg);color:var(--tx);border-color:var(--bd2)}
+
+/* ── Wrap ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px 52px}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);padding:20px;margin-bottom:16px}
+
+/* ── Rates bar ── */
+.ratesbar{display:flex;align-items:stretch;flex-wrap:wrap;padding:0!important;overflow:hidden;margin-top:20px}
+.ratesbar .k{flex:1 1 160px;min-width:140px;border:none;border-radius:0;box-shadow:none;padding:16px 22px;margin:0}
+.ratesbar .k+.k{border-left:1px solid var(--bd)}
+.ratesbar .k span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mu);display:block;margin-bottom:6px}
+.ratesbar .k b{font-size:28px;font-weight:700;letter-spacing:-.035em;line-height:1;display:block;margin-bottom:4px}
+.rsp{margin-left:auto;flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:8px;padding:12px 18px;border-left:1px solid var(--bd)}
+.rsp .hint{text-align:right;max-width:360px}
+.rsp-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+/* ── Rate settings ── */
+#ratesettings{background:var(--card);border:1px solid var(--bd);border-radius:14px;box-shadow:var(--sh);padding:18px 22px;margin-top:8px;margin-bottom:16px}
+
+/* ── Buttons ── */
+button{padding:7px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font:13px/1 Inter,sans-serif;cursor:pointer;transition:.12s;white-space:nowrap}
+button:hover{background:var(--bg);border-color:var(--bd2)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.p{background:var(--ac);color:#fff;border-color:transparent;font-weight:600;font-size:14px;padding:9px 22px}
+button.p:hover{background:var(--ac-h)}
+td button{padding:4px 10px;font-size:12px}
+
+/* ── Inputs ── */
+label{display:block;font-size:12px;font-weight:500;color:var(--mu);margin-bottom:5px}
+input,select{width:100%;padding:8px 11px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx);font:14px/1 Inter,sans-serif;outline:none;transition:.12s}
+input:hover,select:hover{border-color:var(--bd2)}
+input:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+input::placeholder{color:var(--mu);opacity:.65}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) input,:root:not([data-theme="light"]) select{background:#0a1628}}
+:root[data-theme="dark"] input,:root[data-theme="dark"] select{background:#0a1628}
+
+/* ── Grid ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
+
+/* ── Section heading ── */
+.sh{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:10px;margin:20px 0 14px}
+.sh::before,.sh::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--bd);margin-top:24px}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:11px 22px;color:var(--mu);font:500 14px/1 Inter,sans-serif;cursor:pointer;margin-bottom:-2px;transition:.12s}
+.tabs button:hover{color:var(--tx);background:none}
+.tabs button.on{color:var(--ac);border-bottom-color:var(--ac);font-weight:600}
+
+/* ── KPI tiles ── */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.k{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;box-shadow:var(--sh)}
+.k span{font-size:12px;font-weight:500;color:var(--mu);display:block;margin-bottom:6px}
+.k b{font-size:22px;font-weight:700;letter-spacing:-.025em;display:block}
+
+/* ── Live calc ── */
+.live{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:16px}
+.live div{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px 14px}
+.live span{font-size:12px;color:var(--mu);display:block;margin-bottom:3px}
+.live b{font-size:16px;font-weight:600}
+
+/* ── Verdict ── */
+.verdict{margin-top:12px;padding:12px 16px;border-radius:10px;font-weight:600;font-size:13px;border:1px solid}
+.verdict.g{background:var(--gb);color:var(--g);border-color:var(--g-bd)}
+.verdict.r{background:var(--rb);color:var(--r);border-color:var(--r-bd)}
+.verdict.y{background:var(--yb);color:var(--y);border-color:var(--y-bd)}
+
+/* ── Banner ── */
+.banner{padding:12px 16px;border-radius:10px;margin-bottom:10px;font-weight:500;font-size:13px;border:1px solid var(--y-bd);background:var(--yb);color:var(--y)}
+.banner.g{background:var(--gb);color:var(--g);border-color:var(--g-bd)}
+.banner.r{background:var(--rb);color:var(--r);border-color:var(--r-bd)}
+
+/* ── Row ── */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+
+/* ── Filters ── */
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:12px 0 8px;padding:14px 16px;background:var(--bg);border-radius:10px;border:1px solid var(--bd)}
+
+/* ── Table ── */
+.tw{overflow-x:auto;margin-top:10px;border-radius:10px;border:1px solid var(--bd)}
+table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:13px}
+th{padding:10px 12px;background:var(--bg);border-bottom:2px solid var(--bd);text-align:right;font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}
+td{padding:10px 12px;border-bottom:1px solid var(--bd);text-align:right;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bg)}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+th.s{cursor:pointer;user-select:none}
+th.s:hover{color:var(--tx)}
+tr.hl td{background:var(--yb)}
+
+/* ── Tags ── */
+.tag{display:inline-flex;align-items:center;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:500;border:1px solid transparent}
+.tag.g{background:var(--gb);color:var(--g);border-color:var(--g-bd)}
+.tag.y{background:var(--yb);color:var(--y);border-color:var(--y-bd)}
+.tag.r{background:var(--rb);color:var(--r);border-color:var(--r-bd)}
+
+/* ── Two col ── */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+
+/* ── SVG charts ── */
+svg text{fill:var(--mu);font-size:11px;font-family:Inter,sans-serif}
+.bp{fill:var(--g)}.bn{fill:var(--r)}
+#spothint{margin-top:4px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Export Realization</div>
+        <div class="brand-sub">Compare spot rate vs. bank rate on foreign receipts</div>
+      </div>
+    </div>
+    <button id="theme"></button>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="card ratesbar" id="rates"></div>
+<div id="ratesettings" hidden>
+  <b style="font-size:13px;font-weight:600;display:block;margin-bottom:12px">Rate Source Settings</b>
+  <div style="max-width:480px">
+    <label>Alpha Vantage API key &nbsp;<a href="https://www.alphavantage.co/support/#api-key" target="_blank" style="font-weight:400">Get free key ↗</a></label>
+    <input id="avkey" placeholder="Paste your key here" autocomplete="off">
+    <div class="hint" id="avkeyhint" style="margin-top:6px">With a key: rates refresh every hour (stays within the 25 req/day free limit). Without: daily free sources are used.</div>
+  </div>
+</div>
+
+<div id="alertbar"></div>
+
+<div class="tabs" id="tabs">
+  <button data-t="inv" class="on">Invoices</button>
+  <button data-t="rep">Reports</button>
+  <button data-t="trend">Rate Trend &amp; Alerts</button>
+</div>
+
+<!-- ── Invoices ── -->
+<section id="t-inv">
+<div class="card" style="margin-top:16px">
+  <b style="font-size:15px;font-weight:600;display:block;margin-bottom:4px">Invoice Entry</b>
+
+  <div class="sh">Invoice Details</div>
+  <div class="grid">
+    <div><label>Invoice No. <span style="font-weight:400">(optional)</span></label><input id="inv" placeholder="e.g. INV-001"></div>
+    <div><label>Customer</label><input id="cust" placeholder="Customer name"></div>
+    <div><label>Currency</label><select id="cur"><option>USD</option><option>EUR</option><option>GBP</option></select></div>
+    <div><label>Amount Received (foreign)</label><input id="amt" type="number" step="any" placeholder="0.00"></div>
+    <div><label>Received Date</label><input id="rdate" type="date"></div>
+    <div>
+      <label>Spot Rate <span style="font-weight:400">(INR per 1 unit)</span></label>
+      <input id="spot" type="number" step="any" placeholder="0.0000">
+      <div class="hint" id="spothint"></div>
+    </div>
+    <div><label>CC Interest % p.a.</label><input id="ccr" type="number" step="any" placeholder="9.5"></div>
+  </div>
+
+  <div class="sh">Bank Conversion</div>
+  <div class="grid">
+    <div><label>Bank Name <span style="font-weight:400">(optional)</span></label><input id="bank" list="banks" placeholder="Bank name"><datalist id="banks"></datalist></div>
+    <div><label>Bank Call Date</label><input id="bdate" type="date"><div class="hint" style="margin-top:4px">Defaults to received date; editable</div></div>
+    <div><label>Bank Rate</label><input id="brate" type="number" step="any" placeholder="Leave empty if pending"></div>
+  </div>
+
+  <div class="live" id="live"></div>
+  <div id="verdict"></div>
+
+  <div class="row">
+    <button class="p" id="save">Save Invoice</button>
+    <button id="clear">Clear</button>
+    <small>Leave the bank rate empty to keep the invoice pending and see the break-even rate.</small>
+  </div>
+  <div id="whatif"></div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:4px">
+    <b style="font-size:15px;font-weight:600">Saved Invoices</b>
+    <span style="display:flex;gap:8px;flex-wrap:wrap">
+      <button id="csv">Export CSV</button>
+      <button id="imp">Import Backup</button>
+      <button id="bak">Backup JSON</button>
+      <input type="file" id="file" accept=".json" hidden>
+    </span>
+  </div>
+  <div class="filters">
+    <div><label>Search</label><input id="fq" placeholder="Invoice, customer, bank"></div>
+    <div><label>Status</label><select id="fst"><option value="">All</option><option>Pending</option><option>Done</option></select></div>
+    <div><label>Currency</label><select id="fcur"><option value="">All</option></select></div>
+    <div><label>Bank</label><select id="fbank"><option value="">All</option></select></div>
+    <div><label>Received From</label><input id="ffrom" type="date"></div>
+    <div><label>Received To</label><input id="fto" type="date"></div>
+    <div><label>Warn if Pending (days)</label><input id="warn" type="number" min="1"></div>
+    <div style="align-self:end"><button id="fclr">Clear Filters</button></div>
+  </div>
+  <small id="fcount"></small>
+  <div class="tw"><table id="tbl"></table></div>
+</div>
+<small style="display:block;padding:2px 0 8px;text-align:center">Formula: A = Amount &times; Spot &nbsp;&middot;&nbsp; B = Amount &times; Bank rate &nbsp;&middot;&nbsp; Net = (B &minus; A) &minus; CC cost &nbsp;&middot;&nbsp; Break-even = Spot &times; (1 + CC% &times; N / 365)</small>
+</section>
+
+<!-- ── Reports ── -->
+<section id="t-rep" hidden>
+  <div class="card" style="margin-top:16px">
+    <div class="row" style="margin-top:0">
+      <div><label>Month (by bank conversion date)</label><select id="rmonth"></select></div>
+      <small>Only completed invoices (bank rate entered) are counted.</small>
+    </div>
+  </div>
+  <div id="reports"></div>
+</section>
+
+<!-- ── Trend & Alerts ── -->
+<section id="t-trend" hidden style="margin-top:16px">
+  <div class="two">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <b style="font-size:15px;font-weight:600">Rate Trend — 30 Days</b>
+        <select id="tcur" style="width:auto;padding:6px 10px;font-size:13px"><option>USD</option><option>EUR</option><option>GBP</option></select>
+      </div>
+      <div id="trend"></div>
+    </div>
+    <div class="card">
+      <b style="font-size:15px;font-weight:600;display:block;margin-bottom:14px">Rate Alerts</b>
+      <div class="grid">
+        <div><label>Currency</label><select id="acur"><option>USD</option><option>EUR</option><option>GBP</option></select></div>
+        <div><label>When rate is</label><select id="adir"><option value="gte">at or above</option><option value="lte">at or below</option></select></div>
+        <div><label>Target (INR)</label><input id="atg" type="number" step="any" placeholder="0.00"></div>
+      </div>
+      <div class="row">
+        <button class="p" id="aadd">Add Alert</button>
+        <small>Checked on every rate refresh. Allow browser notifications for pop-ups.</small>
+      </div>
+      <div class="tw" style="margin-top:12px"><table id="atbl"></table></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='export_realization_v1';
+const CURS=['USD','EUR','GBP'];
+let db={ccr:9.5,warn:5,items:[],alerts:[],avKey:''};
+try{const s=localStorage.getItem(KEY);if(s)db=Object.assign(db,JSON.parse(s))}catch(e){}
+const persist=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
+const f=(n,d=2)=>n!==null&&n!==''&&n!==undefined&&isFinite(n)?(+n).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d}):'-';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const days=(a,b)=>Math.round((new Date(b)-new Date(a))/864e5);
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today=()=>ymd(new Date());
+const addDays=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return ymd(d)};
+let editId=null,spotManual=false,bdateManual=false;
+
+/* ---------- Theme ---------- */
+const isDark=()=>{const t=document.documentElement.getAttribute('data-theme');return t?t==='dark':matchMedia('(prefers-color-scheme:dark)').matches};
+const themeLabel=()=>{$('theme').textContent=isDark()?'Switch to light mode':'Switch to dark mode'};
+try{const t=localStorage.getItem(KEY+'_theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
+themeLabel();
+$('theme').onclick=()=>{const t=isDark()?'light':'dark';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem(KEY+'_theme',t)}catch(e){}themeLabel()};
+
+/* ---------- Tabs ---------- */
+$('tabs').onclick=e=>{const t=e.target.dataset.t;if(!t)return;
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  ['inv','rep','trend'].forEach(k=>$('t-'+k).hidden=k!==t);
+  if(t==='rep')renderReports();if(t==='trend'){renderTrend();renderAlerts()}
+};
+
+/* ---------- Core calculation ---------- */
+function calc(x){
+  const amt=+x.amt,spot=+x.spot,ccr=+x.ccr/100;
+  const o={A:amt*spot};
+  if(!x.bdate||!x.rdate)return o;
+  o.N=days(x.rdate,x.bdate);
+  o.be=spot*(1+ccr*o.N/365);
+  o.ccCost=o.A*ccr/365*o.N;
+  if(x.brate!==''&&x.brate!=null&&+x.brate>0){o.B=amt*(+x.brate);o.diff=o.B-o.A;o.net=o.diff-o.ccCost}
+  return o;
+}
+const form=()=>({inv:$('inv').value.trim(),cust:$('cust').value.trim(),cur:$('cur').value,amt:$('amt').value,rdate:$('rdate').value,spot:$('spot').value,bank:$('bank').value.trim(),bdate:$('bdate').value,brate:$('brate').value,ccr:$('ccr').value});
+
+function renderLive(){
+  const x=form(),ok=x.amt&&x.spot&&+x.amt>0&&+x.spot>0;
+  if(!ok){$('live').innerHTML='';$('verdict').innerHTML='';$('whatif').innerHTML='';return}
+  const o=calc(x);
+  const liveR=live.rates[x.cur];
+  let h=`<div><span>(A) Spot conversion <small style="color:var(--mu)">(spot rate)</small></span><b>${f(o.A)}</b></div>`;
+  if(liveR){
+    h+=`<div><span>Live mid-market now</span><b>${f(liveR,4)}</b></div>`;
+    const svl=+x.spot-liveR,svlP=(svl/liveR)*100;
+    if(spotManual||editId!=null)h+=`<div><span>Spot vs live (at entry)</span><b class="${svl>=0?'g':'r'}">${svl>=0?'+':''}${f(svl,4)} (${svlP>=0?'+':''}${f(svlP,2)}%)</b></div>`;
+  }
+  if(o.N!=null){
+    h+=`<div><span>Days held (N)</span><b>${o.N}</b></div><div><span>CC interest cost</span><b>${f(o.ccCost)}</b></div><div><span>Break-even bank rate</span><b>${f(o.be,4)}</b></div>`;
+    if(o.B!=null){
+      h+=`<div><span>(B) Bank conversion <small style="color:var(--mu)">(bank rate)</small></span><b>${f(o.B)}</b></div><div><span>Difference B&minus;A</span><b>${f(o.diff)}</b></div><div><span>Net gain / loss</span><b class="${o.net>=0?'g':'r'}">${f(o.net)}</b></div>`;
+      if(liveR){
+        const bvl=+x.brate-liveR,bvlP=(bvl/liveR)*100;
+        h+=`<div style="border:1px solid var(--bd);grid-column:1/-1;padding:10px 14px;border-radius:10px;background:var(--bg)"><span style="color:var(--mu);font-size:12px">Bank rate vs live mid-market</span><br><b class="${bvl>=0?'g':'r'}" style="font-size:17px">${bvl>=0?'+':''}${f(bvl,4)} INR/unit &nbsp; (${bvlP>=0?'+':''}${f(bvlP,2)}%)</b><br><small style="color:var(--mu)">Bank ${bvl>=0?'paid MORE than':'paid LESS than'} mid-market by ${f(Math.abs(bvl*+x.amt))} on this invoice.</small></div>`;
+      }
+    }
+  }
+  $('live').innerHTML=h;
+  let v='';
+  if(o.N!=null&&o.N<0)v='<div class="verdict y">The bank date is earlier than the received date. Please check the dates.</div>';
+  else if(o.net!=null)v=o.net>=0?`<div class="verdict g">PROFIT: the bank rate covered ${o.N} days of interest cost and still gained ${f(o.net)}.</div>`
+    :`<div class="verdict r">LOSS: the bank rate is below the break-even of ${f(o.be,4)}. Net loss of ${f(-o.net)}.</div>`;
+  else if(o.be!=null)v=`<div class="verdict y">Ask the bank for at least <b>${f(o.be,4)}</b> (for ${o.N} days). Anything below this is a loss.</div>`;
+  $('verdict').innerHTML=v;
+  renderWhatIf(x);
+}
+
+/* What-if: convert on day 0,1,2,3,5,7,10 after receipt */
+function renderWhatIf(x){
+  if(!x.rdate||!(+x.ccr>=0)){$('whatif').innerHTML='';return}
+  const A=+x.amt*+x.spot,spot=+x.spot,ccr=+x.ccr/100;
+  const rows=[0,1,2,3,5,7,10].map(n=>{
+    const cc=A*ccr/365*n,be=spot*(1+ccr*n/365),d=addDays(x.rdate,n);
+    return `<tr class="${x.bdate===d?'hl':''}"><td class="l">${n===0?'Same day':'After '+n+' day'+(n>1?'s':'')}</td><td>${d}</td><td>${f(cc)}</td><td><b>${f(be,4)}</b></td><td>+${f(be-spot,4)} (${f((be/spot-1)*100,3)}%)</td></tr>`}).join('');
+  $('whatif').innerHTML=`<h3 style="margin-top:18px">What if we convert later?</h3><div class="tw"><table><tr><th class="l">Convert</th><th>Date</th><th>Interest cost</th><th>Break-even rate</th><th>Needed over spot</th></tr>${rows}</table></div>
+   <small>Waiting is only worth it if the bank pays at least the break-even rate for that day.</small>`;
+}
+
+/* ---------- Invoice list: filter, sort, pending alerts ---------- */
+let sort={k:'rdate',d:-1};
+const COLS=[['inv','Invoice','l'],['cust','Customer','l'],['amtv','Amount'],['rdate','Received'],['spot','Spot'],['A','(A) INR'],['bank','Bank','l'],['bdate','Bank date'],['brate','Bank rate'],['N','Days'],['ccCost','CC cost'],['be','Break-even'],['net','Net'],['pend','Pending'],['status','Status','l']];
+function model(){
+  return db.items.map((x,i)=>{
+    const o=calc(x),done=o.net!=null,pd=done?0:Math.max(0,days(x.rdate,today()));
+    const perDay=o.A*(+x.ccr/100)/365;
+    return {i,x,o,done,pd,perDay,pint:perDay*pd,
+      v:{inv:x.inv,cust:x.cust,amtv:+x.amt,rdate:x.rdate,spot:+x.spot,A:o.A,bank:x.bank||'',bdate:x.bdate,brate:+x.brate||null,N:o.N,ccCost:o.ccCost,be:o.be,net:o.net,pend:done?null:pd,status:done?'Done':'Pending'}};
+  });
+}
+function filtered(){
+  const q=$('fq').value.toLowerCase(),st=$('fst').value,cu=$('fcur').value,bk=$('fbank').value,a=$('ffrom').value,b=$('fto').value;
+  return model().filter(m=>{const x=m.x;
+    if(q&&!(`${x.inv} ${x.cust} ${x.bank}`.toLowerCase().includes(q)))return false;
+    if(st&&(m.done?'Done':'Pending')!==st)return false;
+    if(cu&&x.cur!==cu)return false;if(bk&&(x.bank||'')!==bk)return false;
+    if(a&&x.rdate<a)return false;if(b&&x.rdate>b)return false;return true});
+}
+function cmp(a,b){const x=a.v[sort.k],y=b.v[sort.k];
+  if((x==null||x==='')&&(y==null||y===''))return 0;if(x==null||x==='')return 1;if(y==null||y==='')return -1;
+  return (typeof x==='number'?x-y:String(x).localeCompare(String(y)))*sort.d}
+
+function renderAll(){
+  const all=model(),list=filtered().sort(cmp);
+  const keep=(id,vals)=>{const el=$(id),v=el.value;el.innerHTML='<option value="">All</option>'+vals.map(s=>`<option>${esc(s)}</option>`).join('');el.value=vals.includes(v)?v:''};
+  const banks=[...new Set(db.items.map(x=>x.bank).filter(Boolean))].sort();
+  keep('fcur',[...new Set(db.items.map(x=>x.cur))].sort());keep('fbank',banks);
+  $('banks').innerHTML=banks.map(b=>`<option value="${esc(b)}">`).join('');
+
+  let tg=0,tl=0,pend=0;
+  list.forEach(m=>{if(m.done){m.o.net>=0?tg+=m.o.net:tl+=m.o.net}else pend++});
+  const pl=all.filter(m=>!m.done),pInt=pl.reduce((s,m)=>s+m.pint,0),pDay=pl.reduce((s,m)=>s+m.perDay,0);
+  const late=pl.filter(m=>m.pd>=db.warn);
+
+  $('alertbar').innerHTML=(pl.length?`<div class="banner">${pl.length} invoice${pl.length>1?'s':''} still pending conversion. Interest cost so far: ${f(pInt)}. Costing ${f(pDay)} every day.${late.length?` ${late.length} pending for ${db.warn}+ days: `+late.slice(0,4).map(m=>esc(m.x.inv||m.x.cust||'Invoice')+' ('+m.pd+'d, '+f(m.pint)+')').join(', ')+(late.length>4?'...':''):''}</div>`:'')+firedAlertsHtml();
+
+  const th=COLS.map(([k,t,c])=>`<th class="s ${c||''}" data-k="${k}">${t}${sort.k===k?(sort.d>0?' &#9650;':' &#9660;'):''}</th>`).join('')+'<th></th>';
+  const rows=list.map(m=>{const x=m.x,o=m.o;
+    const pend=m.done?'-':`<span class="tag ${m.pd>=db.warn?'r':'y'}">${m.pd}d &middot; ${f(m.pint)}</span><br><small>${f(m.perDay)}/day</small>`;
+    return `<tr><td class="l">${esc(x.inv)}</td><td class="l">${esc(x.cust)}</td><td>${esc(x.cur)} ${f(+x.amt)}</td><td>${x.rdate||''}</td><td>${f(+x.spot,4)}</td><td>${f(o.A)}</td><td class="l">${esc(x.bank)}</td>
+      <td>${x.bdate||''}</td><td>${x.brate?f(+x.brate,4):'-'}</td><td>${o.N??'-'}</td><td>${o.ccCost!=null?f(o.ccCost):'-'}</td><td>${o.be!=null?f(o.be,4):'-'}</td>
+      <td class="${o.net==null?'':o.net>=0?'g':'r'}">${o.net!=null?f(o.net):'-'}</td><td>${pend}</td><td class="l"><span class="tag ${m.done?'g':'y'}">${m.done?'Done':'Pending'}</span></td>
+      <td class="l"><button onclick="edit(${m.i})">Edit</button> <button onclick="del(${m.i})">Del</button></td></tr>`}).join('');
+  $('tbl').innerHTML=`<tr>${th}</tr>`+(rows||`<tr><td class="l" colspan="16"><small>${db.items.length?'No invoices match the filters.':'No invoices yet.'}</small></td></tr>`);
+  $('fcount').textContent=`Showing ${list.length} of ${db.items.length}. Click a column heading to sort.`;
+  const net=tg+tl;
+  $('kpis').innerHTML=`<div class="k"><span>Invoices (shown)</span><b>${list.length}</b></div><div class="k"><span>Pending conversion</span><b>${pend}</b></div>
+   <div class="k"><span>Total gain</span><b class="g">${f(tg)}</b></div><div class="k"><span>Total loss</span><b class="r">${f(tl)}</b></div>
+   <div class="k"><span>Net (completed)</span><b class="${net>=0?'g':'r'}">${f(net)}</b></div>
+   <div class="k"><span>Interest so far on pending</span><b>${f(pInt)}</b></div><div class="k"><span>Pending cost per day</span><b>${f(pDay)}</b></div>`;
+}
+$('tbl').onclick=e=>{const k=e.target.closest('th.s')?.dataset.k;if(!k)return;sort=sort.k===k?{k,d:-sort.d}:{k,d:1};renderAll()};
+['fq','fst','fcur','fbank','ffrom','fto'].forEach(id=>$(id).addEventListener('input',renderAll));
+$('fclr').onclick=()=>{['fq','fst','fcur','fbank','ffrom','fto'].forEach(id=>$(id).value='');renderAll()};
+$('warn').value=db.warn;
+$('warn').addEventListener('input',()=>{db.warn=Math.max(1,+$('warn').value||5);persist();renderAll()});
+
+/* ---------- Form actions ---------- */
+function reset(){editId=null;spotManual=false;bdateManual=false;['inv','cust','amt','rdate','spot','bank','bdate','brate'].forEach(i=>$(i).value='');$('cur').value='USD';$('ccr').value=db.ccr;$('save').textContent='Save Invoice';applyLive();renderLive()}
+window.edit=i=>{const x=db.items[i];editId=i;
+  if(![...$('cur').options].some(o=>o.value===x.cur))$('cur').add(new Option(x.cur));
+  ['inv','cust','cur','amt','rdate','spot','bank','bdate','brate','ccr'].forEach(k=>$(k).value=x[k]??'');
+  spotManual=true;bdateManual=!!x.bdate&&x.bdate!==x.rdate;spotHint();
+  $('save').textContent='Update Invoice';renderLive();scrollTo(0,0)};
+window.del=i=>{if(confirm('Delete this invoice?')){db.items.splice(i,1);persist();renderAll()}};
+$('save').onclick=()=>{
+  const x=form();
+  if(!(+x.amt>0)||!x.rdate||!(+x.spot>0))return alert('Amount, received date and spot rate are required.');
+  if(x.bdate&&days(x.rdate,x.bdate)<0)return alert('The bank date cannot be earlier than the received date.');
+  if(x.ccr!=='')db.ccr=+x.ccr;
+  editId==null?db.items.push(x):db.items[editId]=x;
+  persist();reset();renderAll();
+};
+$('clear').onclick=reset;
+['inv','cust','cur','amt','rdate','spot','bank','bdate','brate','ccr'].forEach(id=>$(id).addEventListener('input',renderLive));
+$('rdate').addEventListener('input',()=>{if(!bdateManual){$('bdate').value=$('rdate').value;renderLive()}});
+$('bdate').addEventListener('input',()=>{bdateManual=$('bdate').value!==$('rdate').value});
+
+/* ---------- Live rates ---------- */
+let live={rates:{},updated:null,fetched:null,source:'',error:'',busy:false};
+try{const c=localStorage.getItem(KEY+'_rates');if(c)Object.assign(live,JSON.parse(c),{busy:false,error:''})}catch(e){}
+const get=async u=>{const r=await fetch(u,{cache:'no-store',signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error(r.status);return r.json()};
+async function pull(){
+  if(live.busy)return;live.busy=true;live.error='';live.avError='';renderRates();
+  const srcs=[];
+  if(db.avKey){
+    const lastAV=live.source==='Alpha Vantage'?live.fetched:0;
+    const ageMin=(Date.now()-(lastAV||0))/60000;
+    if(ageMin>=55){
+      srcs.push(async()=>{
+        const r={};let ts='';
+        for(const c of CURS){
+          const d=await get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${encodeURIComponent(c)}&to_currency=INR&apikey=${encodeURIComponent(db.avKey)}`);
+          const er=d['Realtime Currency Exchange Rate'];
+          if(!er||!er['5. Exchange Rate'])throw new Error(d['Note']||d['Information']||'Alpha Vantage: invalid response');
+          r[c]=+er['5. Exchange Rate'];if(!ts)ts=er['6. Last Refreshed'];
+        }
+        return {r,t:ts+' (Alpha Vantage real-time)',s:'Alpha Vantage'};
+      });
+    }
+  }
+  srcs.push(
+    async()=>{const d=await get('https://open.er-api.com/v6/latest/USD');if(d.result!=='success')throw 0;
+      const r={};CURS.forEach(c=>r[c]=d.rates.INR/d.rates[c]);return {r,t:d.time_last_update_utc,s:'open.er-api.com'}},
+    async()=>{const d=await get('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
+      const b=d.usd;return {r:{USD:b.inr,EUR:b.inr/b.eur,GBP:b.inr/b.gbp},t:d.date,s:'fawazahmed0 CDN'}},
+    async()=>{const r={},t=[];for(const c of CURS){const d=await get('https://api.frankfurter.dev/v1/latest?base='+c+'&symbols=INR');r[c]=d.rates.INR;t.push(d.date)}
+      return {r,t:t[0]+' (ECB)',s:'frankfurter.dev'}}
+  );
+  let ok=false;
+  for(const fn of srcs){try{const o=await fn();Object.assign(live,{rates:o.r,updated:o.t,source:o.s,fetched:Date.now()});ok=true;
+    try{localStorage.setItem(KEY+'_rates',JSON.stringify(live))}catch(e){}break}catch(e){if(fn===srcs[0]&&db.avKey)live.avError=e.message||'Alpha Vantage error'}}
+  live.busy=false;
+  if(!ok)live.error='Could not fetch live rates (check internet). Showing last saved rates; you can still enter the rate manually.';
+  renderRates();
+  if(ok){applyLive();renderLive();checkAlerts();renderAll();if(!$('t-trend').hidden)renderAlerts()}
+}
+
+function renderRates(){
+  const t=live.fetched?new Date(live.fetched).toLocaleTimeString():'-';
+  const tiles=CURS.map(c=>{
+    const r=live.rates[c];
+    const bankRates=db.items.filter(x=>x.cur===c&&x.brate&&+x.brate>0).map(x=>+x.brate);
+    const avgBank=bankRates.length?bankRates.reduce((a,b)=>a+b,0)/bankRates.length:null;
+    const bankSpread=r&&avgBank!=null?avgBank-r:null;
+    const bankHtml=bankSpread!=null?`<small style="color:${bankSpread>=0?'var(--g)':'var(--r)'}">Avg bank spread: ${bankSpread>=0?'+':''}${f(bankSpread,4)}</small>`:'';
+    return `<div class="k"><span>${c} / INR &nbsp;<small style="font-weight:400;text-transform:none;letter-spacing:0">mid-market</small></span><b>${r?f(r,4):'-'}</b>${bankHtml}</div>`;
+  }).join('');
+  const avBadge=db.avKey?`<span class="tag ${live.source==='Alpha Vantage'?'g':'y'}" style="font-size:11px">${live.source==='Alpha Vantage'?'AV live':'AV key set'}</span>`:'';
+  $('rates').innerHTML=tiles
+   +`<div class="rsp">
+      <div class="rsp-btns">${avBadge}<button id="rf" ${live.busy?'disabled':''}>${live.busy?'Refreshing…':'Refresh rates'}</button><button id="rsettoggle">Rate settings</button></div>
+      <div class="hint">${live.error?`<span class="r">${esc(live.error)}</span><br>`:''}Source: ${esc(live.source||'—')}, updated ${esc(live.updated||'—')}.<br>Last checked ${t}. ${db.avKey?'Auto-checks every 60 min.':'Auto-checks every 5 min.'}</div>
+    </div>`;
+  $('rf').onclick=pull;
+  $('rsettoggle').onclick=()=>{$('ratesettings').hidden=!$('ratesettings').hidden};
+}
+
+function spotHint(){
+  const r=live.rates[$('cur').value];
+  $('spothint').innerHTML=r&&spotManual?`Live: ${f(r,4)} <a href="#" id="uselive">use live</a>`:(r?'Auto-filled with live rate':'');
+  const u=$('uselive');if(u)u.onclick=e=>{e.preventDefault();spotManual=false;applyLive();renderLive()};
+}
+function applyLive(){const r=live.rates[$('cur').value];if(r&&!spotManual&&editId==null)$('spot').value=r.toFixed(4);spotHint()}
+$('spot').addEventListener('input',()=>{spotManual=true;spotHint()});
+$('cur').addEventListener('change',()=>{spotManual=false;applyLive();renderLive()});
+
+/* ---------- Rate settings panel ---------- */
+function initRateSettings(){$('avkey').value=db.avKey||''}
+$('avkey').addEventListener('input',()=>{db.avKey=$('avkey').value.trim();persist();renderRates()});
+initRateSettings();
+
+/* ---------- Auto-refresh ---------- */
+let _refreshTimer=null;
+function scheduleRefresh(){clearInterval(_refreshTimer);_refreshTimer=setInterval(pull,db.avKey?60*60*1000:5*60*1000)}
+scheduleRefresh();
+$('avkey').addEventListener('input',scheduleRefresh);
+
+/* ---------- Charts ---------- */
+function bars(data){
+  if(!data.length)return '<small>No data yet.</small>';
+  const W=560,rowH=24,L=130,pad=60,H=data.length*rowH+8,max=Math.max(...data.map(d=>Math.abs(d.v)),1),half=(W-L-pad)/2,mid=L+half;
+  const rows=data.map((d,i)=>{const w=Math.abs(d.v)/max*half,y=i*rowH+4;
+    return `<text x="${L-6}" y="${y+14}" text-anchor="end">${esc(String(d.l).slice(0,18))}</text><rect class="${d.v>=0?'bp':'bn'}" x="${d.v>=0?mid:mid-w}" y="${y+3}" width="${Math.max(w,1)}" height="${rowH-8}" rx="3"/>
+     <text x="${d.v>=0?mid+w+4:mid-w-4}" y="${y+14}" text-anchor="${d.v>=0?'start':'end'}">${f(d.v,0)}</text>`}).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img"><line x1="${mid}" x2="${mid}" y1="0" y2="${H}" stroke="currentColor" opacity=".2"/>${rows}</svg>`;
+}
+function line(pts){
+  if(pts.length<2)return '<small>No data.</small>';
+  const W=640,H=230,L=52,R=12,T=14,B=26,vs=pts.map(p=>p.v),mn=Math.min(...vs),mx=Math.max(...vs),sp=(mx-mn)||1;
+  const X=i=>L+i/(pts.length-1)*(W-L-R),Y=v=>T+(1-(v-mn)/sp)*(H-T-B);
+  const path=pts.map((p,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1)).join(' ');
+  const ticks=[mn,(mn+mx)/2,mx].map(v=>`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="currentColor" opacity=".1"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(2)}</text>`).join('');
+  const l=pts.length-1;
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img">${ticks}<path d="${path}" fill="none" stroke="var(--ac)" stroke-width="2.5"/><circle cx="${X(l)}" cy="${Y(pts[l].v)}" r="4" fill="var(--ac)"/>
+   <text x="${L}" y="${H-6}">${pts[0].d}</text><text x="${W-R}" y="${H-6}" text-anchor="end">${pts[l].d}</text></svg>`;
+}
+
+/* ---------- Reports ---------- */
+function renderReports(){
+  const done=model().filter(m=>m.done&&m.x.bdate);
+  const months=[...new Set(done.map(m=>m.x.bdate.slice(0,7)))].sort().reverse();
+  const cur=$('rmonth').value;
+  $('rmonth').innerHTML='<option value="">All months</option>'+months.map(s=>`<option>${s}</option>`).join('');
+  $('rmonth').value=months.includes(cur)?cur:'';
+  const sel=done.filter(m=>!$('rmonth').value||m.x.bdate.startsWith($('rmonth').value));
+  if(!sel.length){$('reports').innerHTML='<div class="card"><small>No completed invoices for this selection.</small></div>';return}
+  const agg=kf=>{const M=new Map();sel.forEach(m=>{const k=kf(m)||'(not set)',a=M.get(k)||{n:0,g:0,l:0,net:0};
+    a.n++;m.o.net>=0?a.g+=m.o.net:a.l+=m.o.net;a.net+=m.o.net;M.set(k,a)});return [...M].sort((a,b)=>b[1].net-a[1].net)};
+  const sect=(title,col,rows)=>`<div class="card"><h3>${title}</h3><div class="two"><div class="tw"><table><tr><th class="l">${col}</th><th>Invoices</th><th>Gain</th><th>Loss</th><th>Net</th></tr>
+    ${rows.map(([k,a])=>`<tr><td class="l">${esc(k)}</td><td>${a.n}</td><td class="g">${f(a.g)}</td><td class="r">${f(a.l)}</td><td class="${a.net>=0?'g':'r'}"><b>${f(a.net)}</b></td></tr>`).join('')}</table></div>
+    <div>${bars(rows.map(([k,a])=>({l:k,v:a.net})))}</div></div></div>`;
+  const tot=sel.reduce((s,m)=>s+m.o.net,0);
+  const B=new Map();sel.filter(m=>m.x.bank).forEach(m=>{const k=m.x.bank,p=+m.x.brate-+m.x.spot,a=B.get(k)||{n:0,p:0,pct:0,best:-1e9,days:0,net:0};
+    a.n++;a.p+=p;a.pct+=p/+m.x.spot*100;a.best=Math.max(a.best,p);a.days+=m.o.N;a.net+=m.o.net;B.set(k,a)});
+  const bank=[...B].sort((a,b)=>b[1].pct/b[1].n-a[1].pct/a[1].n);
+  $('reports').innerHTML=`<div class="kpis"><div class="k"><span>Completed invoices</span><b>${sel.length}</b></div><div class="k"><span>Net gain / loss</span><b class="${tot>=0?'g':'r'}">${f(tot)}</b></div></div>`
+   +sect('By month','Month',agg(m=>m.x.bdate.slice(0,7)).sort((a,b)=>a[0].localeCompare(b[0])))+sect('By customer','Customer',agg(m=>m.x.cust))+sect('By currency','Currency',agg(m=>m.x.cur))+sect('By bank','Bank',agg(m=>m.x.bank))
+   +`<div class="card"><h3>Bank-wise rate comparison</h3>${bank.length?`<div class="tw"><table><tr><th class="l">Bank</th><th>Deals</th><th>Avg premium over spot (INR/unit)</th><th>Avg premium %</th><th>Best premium</th><th>Avg days</th><th>Net</th></tr>
+    ${bank.map(([k,a])=>`<tr><td class="l">${esc(k)}</td><td>${a.n}</td><td>${f(a.p/a.n,4)}</td><td class="${a.pct>=0?'g':'r'}"><b>${f(a.pct/a.n,3)}%</b></td><td>${f(a.best,4)}</td><td>${f(a.days/a.n,1)}</td><td class="${a.net>=0?'g':'r'}">${f(a.net)}</td></tr>`).join('')}</table></div>
+    <small>Premium = bank rate minus the spot rate recorded for that invoice. Higher is better for negotiation.</small>`:'<small>Add a bank name on completed invoices to compare banks.</small>'}</div>`;
+}
+$('rmonth').addEventListener('input',renderReports);
+
+/* ---------- Rate trend ---------- */
+const histCache={};
+async function renderTrend(){
+  const c=$('tcur').value;$('trend').innerHTML='<small>Loading last 30 days…</small>';
+  try{
+    if(!histCache[c]){const d=await get(`https://api.frankfurter.dev/v1/${addDays(today(),-30)}..?base=${c}&symbols=INR`);
+      histCache[c]=Object.entries(d.rates).map(([k,v])=>({d:k,v:v.INR}))}
+    const pts=histCache[c].slice(),lv=live.rates[c];
+    if(lv&&pts.length&&pts[pts.length-1].d<today())pts.push({d:today(),v:lv});
+    const vs=pts.map(p=>p.v),avg=vs.reduce((a,b)=>a+b,0)/vs.length,now=pts[pts.length-1].v,mn=Math.min(...vs),mx=Math.max(...vs);
+    $('trend').innerHTML=`<div class="banner ${now>=avg?'g':''}">${c} is ${now>=avg?'ABOVE':'BELOW'} its 30-day average by ${f(Math.abs(now-avg),2)} (${f(Math.abs(now/avg-1)*100,2)}%).</div>${line(pts)}
+     <div class="kpis" style="margin:12px 0 0"><div class="k"><span>Now</span><b>${f(now,4)}</b></div><div class="k"><span>30-day high</span><b>${f(mx,4)}</b></div><div class="k"><span>30-day low</span><b>${f(mn,4)}</b></div><div class="k"><span>30-day average</span><b>${f(avg,4)}</b></div></div>
+     <small>Daily reference rates (ECB via frankfurter.dev), business days only.</small>`;
+  }catch(e){$('trend').innerHTML='<div class="banner">Could not load rate history. Check your internet connection, then switch currency to retry.</div>'}
+}
+$('tcur').addEventListener('input',renderTrend);
+
+/* ---------- Rate alerts ---------- */
+function firedAlertsHtml(){return db.alerts.filter(a=>a.fired&&!a.seen).map(a=>`<div class="banner g">Rate alert: ${a.cur} is ${a.dir==='gte'?'at or above':'at or below'} ${f(a.target,4)} (now ${f(a.hit,4)}). <a href="#" onclick="seen('${a.id}');return false">Dismiss</a></div>`).join('')}
+window.seen=id=>{const a=db.alerts.find(x=>x.id===id);if(a)a.seen=true;persist();renderAll()};
+function checkAlerts(){
+  let ch=false;
+  db.alerts.forEach(a=>{const r=live.rates[a.cur];if(!r||a.fired)return;
+    if(a.dir==='gte'?r>=a.target:r<=a.target){a.fired=true;a.hit=r;a.at=new Date().toLocaleString();ch=true;
+      try{if('Notification' in window&&Notification.permission==='granted')new Notification('Rate alert: '+a.cur,{body:`${a.cur}/INR is ${f(r,4)} (target ${a.dir==='gte'?'>=':'<='} ${f(a.target,4)})`})}catch(e){}}});
+  if(ch)persist();
+}
+function renderAlerts(){
+  $('atbl').innerHTML='<tr><th class="l">Currency</th><th>Condition</th><th>Now</th><th class="l">Status</th><th></th></tr>'+(db.alerts.map(a=>`<tr><td class="l">${a.cur}</td><td>${a.dir==='gte'?'&ge;':'&le;'} ${f(a.target,4)}</td><td>${f(live.rates[a.cur],4)}</td>
+    <td class="l"><span class="tag ${a.fired?'g':'y'}">${a.fired?'Reached '+esc(a.at||''):'Waiting'}</span></td><td class="l">${a.fired?`<button onclick="rearm('${a.id}')">Re-arm</button> `:''}<button onclick="delAlert('${a.id}')">Delete</button></td></tr>`).join('')||'<tr><td class="l" colspan="5"><small>No alerts yet.</small></td></tr>');
+}
+window.rearm=id=>{const a=db.alerts.find(x=>x.id===id);if(a){a.fired=false;a.seen=false}persist();checkAlerts();renderAlerts();renderAll()};
+window.delAlert=id=>{db.alerts=db.alerts.filter(x=>x.id!==id);persist();renderAlerts();renderAll()};
+$('aadd').onclick=()=>{const t=+$('atg').value;if(!(t>0))return alert('Enter a target rate.');
+  db.alerts.push({id:String(Date.now()),cur:$('acur').value,dir:$('adir').value,target:t,fired:false});
+  try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}
+  $('atg').value='';persist();checkAlerts();renderAlerts();renderAll()};
+
+/* ---------- Export / backup ---------- */
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
+$('csv').onclick=()=>{
+  const h=['Invoice','Customer','Currency','Amount','Received date','Spot rate','A (spot conversion)','Bank','Bank date','Bank rate','B (bank conversion)','Difference','Days','CC % p.a.','CC cost','Break-even rate','Net gain/loss'];
+  const r=filtered().sort(cmp).map(({x,o})=>[x.inv,x.cust,x.cur,x.amt,x.rdate,x.spot,o.A,x.bank,x.bdate,x.brate,o.B??'',o.diff??'',o.N??'',x.ccr,o.ccCost??'',o.be??'',o.net??'']);
+  dl('export_realization.csv','﻿'+[h,...r].map(a=>a.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n'),'text/csv');
+};
+$('bak').onclick=()=>dl('export_realization_backup.json',JSON.stringify(db),'application/json');
+$('imp').onclick=()=>$('file').click();
+$('file').onchange=e=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.items))throw 0;db=Object.assign({ccr:9.5,warn:5,alerts:[]},d);persist();reset();renderAll()}catch(_){alert('Invalid backup file')}};r.readAsText(e.target.files[0])};
+
+renderRates();reset();renderAll();pull();
+</script>
+</body>
+</html>
