@@ -1,0 +1,144 @@
+================================================================
+         EXPORT CURRENCY TOOL — USER GUIDE
+================================================================
+
+WHAT IS THIS?
+-------------
+A tool for exporters to track foreign currency payments (USD/EUR/GBP).
+When your bank converts your export payment to INR, this tool tells you
+if the bank gave you a fair rate — or if you lost money.
+
+
+================================================================
+TOP BAR — LIVE RATES
+================================================================
+
+Shows live USD, EUR, GBP rates against INR (mid-market/true rate).
+Refreshes every 5 minutes automatically.
+Click [ Refresh rates ] to update manually.
+
+
+================================================================
+3 TABS
+================================================================
+
+  Invoices          → Enter & track all invoices
+  Reports           → Monthly summaries & bank comparison
+  Rate Trend & Alerts → Rate chart + set price alerts
+
+
+================================================================
+TAB 1 — INVOICES
+================================================================
+
+STEP 1 — FILL THE INVOICE FORM
+--------------------------------
+  Invoice No.      — Your reference number (optional)
+  Customer         — Buyer name
+  Currency         — USD / EUR / GBP
+  Amount Received  — Foreign currency amount
+  Received Date    — Date you lodged the bill with the bank
+  Spot Rate        — Auto-filled from live rate (edit if needed)
+  CC Interest %    — Your packing credit loan rate (default 9.5%)
+  Bank Name        — Which bank (helps compare banks later)
+  Bank Call Date   — Date bank actually converted the money
+  Bank Rate        — Rate the bank gave you
+                     Leave EMPTY if bank hasn't converted yet → invoice stays Pending
+
+
+STEP 2 — READ THE LIVE CALCULATION
+------------------------------------
+As you type, the tool calculates:
+
+  (A) Spot conversion    → Amount × Spot rate  (what you should have got)
+  Days held (N)          → Days between received date and bank date
+  CC interest cost       → Interest paid on your CC loan for those N days
+  Break-even rate        → Minimum rate the bank must give you to avoid a loss
+  (B) Bank conversion    → Amount × Bank rate
+  Net gain / loss        → (B − A) minus CC cost  ← your real profit or loss
+
+VERDICT:
+  GREEN  → You made a profit
+  RED    → You made a loss (bank rate was below break-even)
+  YELLOW → Bank rate not entered yet — shows the break-even rate to ask the bank for
+
+WHAT-IF TABLE:
+  Shows the break-even rate on Day 0, 1, 2, 3, 5, 7, 10 after receipt.
+  Helps you decide: should I wait for a better rate or convert now?
+
+
+STEP 3 — SAVE & MANAGE
+------------------------
+  [ Save Invoice ] — Saves to the list below
+  [ Clear ]        — Reset the form
+  [ Edit / Del ]   — Edit or delete from the saved table
+
+FILTERS on the table: search by name, filter by status/currency/bank/date.
+Click any column header to sort.
+
+EXPORT:
+  [ Export CSV ]    — Download as Excel file
+  [ Backup JSON ]   — Full backup of all data
+  [ Import Backup ] — Restore from backup
+
+
+================================================================
+TAB 2 — REPORTS
+================================================================
+
+Shows only completed invoices (bank rate entered).
+
+Breakdown by: Month / Customer / Currency / Bank
+Each shows total gain, loss, and net result.
+
+BANK COMPARISON TABLE — shows which bank gave you the best rate
+on average. Use this data when negotiating with your bank.
+
+
+================================================================
+TAB 3 — RATE TREND & ALERTS
+================================================================
+
+TREND CHART
+  30-day line chart for USD/EUR/GBP.
+  Shows if today's rate is above or below the 30-day average.
+  Use this to decide the right time to ask the bank to convert.
+
+RATE ALERTS
+  Set a target rate. When the rate hits it, you get a notification.
+  Example: "Alert me when USD/INR reaches 86.00"
+  Checked every 5 minutes. Allow browser notifications for pop-ups.
+
+
+================================================================
+DATA
+================================================================
+
+All data is saved to the cloud (Firebase) in real time.
+Opens on any device with the same data.
+Also saved locally in the browser as a backup.
+
+
+================================================================
+FORMULAS (quick reference)
+================================================================
+
+  A  =  Amount × Spot rate
+  B  =  Amount × Bank rate
+  CC cost  =  A × (CC% ÷ 100) ÷ 365 × N days
+  Break-even  =  Spot × (1 + CC% ÷ 100 × N ÷ 365)
+  Net  =  (B − A) − CC cost
+
+
+================================================================
+TIPS
+================================================================
+
+  • Enter the invoice the same day you lodge it with the bank.
+  • Keep Bank Rate blank until the bank converts — use break-even
+    to negotiate.
+  • Always enter the bank name — Reports will show which bank
+    performs best after a few months.
+  • Export CSV every month for your accounts.
+
+================================================================
